@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
 
@@ -26,9 +26,10 @@ CONTEXT:
 def generate_rag_response(query: str, retrieved_docs: list, chat_history: str = ""):
     """
     Takes the user query and the list of retrieved context documents, 
-    and returns a cited answer.
+    and returns a cited answer using Groq (Llama 3).
     """
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    # Using Llama 3 via Groq
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
     
     # Format the context tightly
     context_blocks = []

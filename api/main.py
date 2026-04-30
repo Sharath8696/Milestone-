@@ -16,8 +16,8 @@ try:
     redis_client = redis.Redis(host='localhost', port=6379, db=0, socket_connect_timeout=1)
     redis_client.ping()
     print("Connected to Redis successfully.")
-except redis.ConnectionError:
-    print("Redis not available. Falling back to in-memory session store.")
+except (redis.ConnectionError, redis.TimeoutError):
+    print("Redis not available or timed out. Falling back to in-memory session store.")
     redis_client = None
 
 def get_history(session_id: str):
