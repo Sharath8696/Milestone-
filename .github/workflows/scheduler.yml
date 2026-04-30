@@ -1,0 +1,37 @@
+name: Daily Scraping Service
+
+on:
+  schedule:
+    # Runs at 9:15 AM every day
+    - cron: '15 9 * * *'
+  workflow_dispatch: # Allows manual trigger from github UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ingestion/requirements.txt
+
+    - name: Run Scraping Service
+      run: |
+        python ingestion/scraper.py
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add data/raw/
+        git diff --staged --quiet || (git commit -m "chore: auto-update mutual fund raw data" && git push)
