@@ -4,6 +4,9 @@ on:
   schedule:
     # Runs at 9:15 AM every day
     - cron: '15 9 * * *'
+  push:
+    branches:
+      - main
   workflow_dispatch: # Allows manual trigger from github UI
 
 permissions:
@@ -41,5 +44,5 @@ jobs:
       run: |
         git config --local user.email "github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
-        git add data/raw/ data/chroma_db/
+        git add -f data/raw/ data/chroma_db/
         git diff --staged --quiet || (git commit -m "chore: auto-update mutual fund data and index" && git push)
